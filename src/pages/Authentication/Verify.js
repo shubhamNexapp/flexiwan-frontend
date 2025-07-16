@@ -53,27 +53,15 @@ const Verify = (props) => {
     enableReinitialize: true,
 
     initialValues: {
-      accountName: "",
-      userFirstName: "",
-      userLastName: "",
-      email: "",
-      password: "",
-      userJobTitle: "",
-      userPhoneNumber: "",
-      country: "US",
-      companySize: "0-10",
-      serviceType: "Provider",
-      numberSites: "10",
-      companyType: "",
-      companyDesc: "",
-      captcha: "",
+      id: "",
+      token: "",
     },
 
     onSubmit: async (values) => {
       try {
         const data = {
-          id: "686776e0a357732678beeb3a",
-          token: "3P5qL1cxl7GtzcD7BpxfQf328Inwc3",
+          id: values.id,
+          token: values.token,
         };
 
         const res = await axios.post(
@@ -133,18 +121,18 @@ const Verify = (props) => {
                         <div className="mb-3">
                           <Label>ID</Label>
                           <Input
-                            name="accountName"
+                            name="id"
                             type="text"
                             onChange={validation.handleChange}
                             onBlur={validation.handleBlur}
-                            value={validation.values.accountName}
+                            value={validation.values.id}
                             invalid={
-                              validation.touched.accountName &&
-                              !!validation.errors.accountName
+                              validation.touched.id &&
+                              !!validation.errors.id
                             }
                           />
                           <FormFeedback>
-                            {validation.errors.accountName}
+                            {validation.errors.id}
                           </FormFeedback>
                         </div>
 
@@ -152,18 +140,18 @@ const Verify = (props) => {
                         <div className="mb-3">
                           <Label>Token</Label>
                           <Input
-                            name="userFirstName"
+                            name="token"
                             type="text"
                             onChange={validation.handleChange}
                             onBlur={validation.handleBlur}
-                            value={validation.values.userFirstName}
+                            value={validation.values.token}
                             invalid={
-                              validation.touched.userFirstName &&
-                              !!validation.errors.userFirstName
+                              validation.touched.token &&
+                              !!validation.errors.token
                             }
                           />
                           <FormFeedback>
-                            {validation.errors.userFirstName}
+                            {validation.errors.token}
                           </FormFeedback>
                         </div>
 

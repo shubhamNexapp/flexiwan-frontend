@@ -101,12 +101,12 @@ const Header = props => {
               <i className="fa fa-fw fa-bars"></i>
             </button>
 
-            <form className="app-search d-none d-lg-block">
+            {/* <form className="app-search d-none d-lg-block">
               <div className="position-relative">
                 <input type="text" className="form-control" placeholder="Search..." />
                 <button className="btn btn-primary" type="button"><i className="bx bx-search-alt align-middle"></i></button>
               </div>
-            </form>
+            </form> */}
           </div>
 
           <div className="d-flex">
@@ -174,12 +174,11 @@ const Header = props => {
               </div>
             </div>
 
-            <LanguageDropdown />
+            {/* <LanguageDropdown /> */}
 
-            {/* light / dark mode */}
-            <LightDark layoutMode={props['layoutMode']} onChangeLayoutMode={onChangeLayoutMode} />
+            {/* <LightDark layoutMode={props['layoutMode']} onChangeLayoutMode={onChangeLayoutMode} /> */}
 
-            <Dropdown
+            {/* <Dropdown
               className="d-none d-lg-inline-block ms-1"
               isOpen={socialDrp}
               toggle={() => {
@@ -240,10 +239,10 @@ const Header = props => {
                   </Row>
                 </div>
               </DropdownMenu>
-            </Dropdown>
+            </Dropdown> */}
 
-            <NotificationDropdown />
-            <div
+            {/* <NotificationDropdown /> */}
+            {/* <div
               onClick={() => {
                 dispatch(showRightSidebarAction(!showRightSidebar));
               }}
@@ -258,7 +257,7 @@ const Header = props => {
                   className="icon-lg"
                 />
               </button>
-            </div>
+            </div> */}
             <ProfileMenu />
 
           </div>

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Collapse } from "reactstrap";
 import { Link } from "react-router-dom";
 import classname from "classnames";
-import withRouter from "../Common/withRouter"
+import withRouter from "../Common/withRouter";
 
 //Import Icons
 import FeatherIcon from "feather-icons-react";
@@ -13,8 +13,7 @@ import { withTranslation } from "react-i18next";
 
 import { connect } from "react-redux";
 
-const Navbar = props => {
-
+const Navbar = (props) => {
   const [ui, setui] = useState(false);
   const [app, setapp] = useState(false);
   const [email, setemail] = useState(false);
@@ -102,27 +101,37 @@ const Navbar = props => {
             >
               <ul className="navbar-nav">
                 <li className="nav-item dropdown">
-                  <Link className="nav-link dropdown-toggle arrow-none" to="/dashboard">
-                    <FeatherIcon
-                      icon="home"
-                    />
+                  <Link
+                    className="nav-link dropdown-toggle arrow-none"
+                    to="/dashboard"
+                  >
+                    <FeatherIcon icon="home" />
                     <span>{props.t("Dashboard")}</span>
                   </Link>
                 </li>
 
                 <li className="nav-item dropdown">
                   <Link
+                    className="nav-link dropdown-toggle arrow-none"
+                    to="/users"
+                  >
+                    <FeatherIcon icon="home" />
+                    <span>{props.t("Users")}</span>
+                  </Link>
+                </li>
+
+                <li className="nav-item dropdown">
+                  <Link
                     to="/#"
-                    onClick={e => {
+                    onClick={(e) => {
                       e.preventDefault();
                       setui(!ui);
                     }}
                     className="nav-link dropdown-toggle arrow-none"
                   >
-                    <FeatherIcon
-                      icon="briefcase"
-                    />
-                    <span> {props.t("Elements")}</span> <div className="arrow-down"></div>
+                    <FeatherIcon icon="briefcase" />
+                    <span> {props.t("Elements")}</span>{" "}
+                    <div className="arrow-down"></div>
                   </Link>
                   <div
                     className={classname(
@@ -134,45 +143,77 @@ const Navbar = props => {
                       <Row>
                         <Col lg={8}>
                           <div>
-                            <div className="menu-title">{props.t("Elements")}</div>
+                            <div className="menu-title">
+                              {props.t("Elements")}
+                            </div>
                             <Row className="g-0">
                               <Col lg={5}>
                                 <div>
-                                  <Link to="/ui-alerts" className="dropdown-item">
+                                  <Link
+                                    to="/ui-alerts"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("Alerts")}
                                   </Link>
-                                  <Link to="/ui-buttons" className="dropdown-item">
+                                  <Link
+                                    to="/ui-buttons"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("Buttons")}
                                   </Link>
-                                  <Link to="/ui-cards" className="dropdown-item">
+                                  <Link
+                                    to="/ui-cards"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("Cards")}
                                   </Link>
-                                  <Link to="/ui-carousel" className="dropdown-item">
+                                  <Link
+                                    to="/ui-carousel"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("Carousel")}
                                   </Link>
-                                  <Link to="/ui-dropdowns" className="dropdown-item">
+                                  <Link
+                                    to="/ui-dropdowns"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("Dropdowns")}
                                   </Link>
                                   <Link to="/ui-grid" className="dropdown-item">
                                     {props.t("Grid")}
                                   </Link>
-                                  <Link to="/ui-images" className="dropdown-item">
+                                  <Link
+                                    to="/ui-images"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("Images")}
                                   </Link>
-                                  <Link to="/ui-modals" className="dropdown-item">
+                                  <Link
+                                    to="/ui-modals"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("Modals")}
                                   </Link>
-                                  <Link to="/ui-offcanvas" className="dropdown-item">
+                                  <Link
+                                    to="/ui-offcanvas"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("Offcanvas")}
                                   </Link>
                                 </div>
                               </Col>
                               <Col lg={5}>
                                 <div>
-                                  <Link to="/ui-progressbars" className="dropdown-item">
+                                  <Link
+                                    to="/ui-progressbars"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("Progress Bars")}
                                   </Link>
-                                  <Link to="/ui-placeholders" className="dropdown-item">
+                                  <Link
+                                    to="/ui-placeholders"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("Placeholders")}
                                   </Link>
                                   <Link
@@ -181,19 +222,34 @@ const Navbar = props => {
                                   >
                                     {props.t("Tabs & Accordions")}
                                   </Link>
-                                  <Link to="/ui-typography" className="dropdown-item">
+                                  <Link
+                                    to="/ui-typography"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("Typography")}
                                   </Link>
-                                  <Link to="/ui-toasts" className="dropdown-item">
+                                  <Link
+                                    to="/ui-toasts"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("Toasts")}
                                   </Link>
-                                  <Link to="/ui-video" className="dropdown-item">
+                                  <Link
+                                    to="/ui-video"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("Video")}
                                   </Link>
-                                  <Link to="/ui-general" className="dropdown-item">
+                                  <Link
+                                    to="/ui-general"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("General")}
                                   </Link>
-                                  <Link to="/ui-colors" className="dropdown-item">
+                                  <Link
+                                    to="/ui-colors"
+                                    className="dropdown-item"
+                                  >
                                     {props.t("Colors")}
                                   </Link>
                                 </div>
@@ -203,20 +259,37 @@ const Navbar = props => {
                         </Col>
                         <Col lg={4}>
                           <div>
-                            <div className="menu-title">{props.t("Extended")}</div>
-                            <Link to="/extended-lightbox" className="dropdown-item">
+                            <div className="menu-title">
+                              {props.t("Extended")}
+                            </div>
+                            <Link
+                              to="/extended-lightbox"
+                              className="dropdown-item"
+                            >
                               {props.t("Lightbox")}
                             </Link>
-                            <Link to="/extended-rangeslider" className="dropdown-item">
+                            <Link
+                              to="/extended-rangeslider"
+                              className="dropdown-item"
+                            >
                               {props.t("Range Slider")}
                             </Link>
-                            <Link to="/extended-session-timeout" className="dropdown-item">
+                            <Link
+                              to="/extended-session-timeout"
+                              className="dropdown-item"
+                            >
                               {props.t("Session Timeout")}
                             </Link>
-                            <Link to="/extended-rating" className="dropdown-item">
+                            <Link
+                              to="/extended-rating"
+                              className="dropdown-item"
+                            >
                               {props.t("Rating")}
                             </Link>
-                            <Link to="/extended-notifications" className="dropdown-item">
+                            <Link
+                              to="/extended-notifications"
+                              className="dropdown-item"
+                            >
                               {props.t("Notifications")}
                             </Link>
                           </div>
@@ -229,19 +302,17 @@ const Navbar = props => {
                 <li className="nav-item dropdown">
                   <Link
                     to="/#"
-                    onClick={e => {
+                    onClick={(e) => {
                       e.preventDefault();
                       setapp(!app);
                     }}
                     className="nav-link dropdown-togglez arrow-none"
                   >
-                    <FeatherIcon
-                      icon="grid"
-                    />
+                    <FeatherIcon icon="grid" />
                     {props.t("Apps")} <div className="arrow-down"></div>
                   </Link>
                   <div className={classname("dropdown-menu", { show: app })}>
-                    <Link to="/apps-calendar" className="dropdown-item">
+                    <Link to="/organizations" className="dropdown-item">
                       {props.t("Calendar")}
                     </Link>
                     <Link to="/apps-chat" className="dropdown-item">
@@ -251,7 +322,7 @@ const Navbar = props => {
                       <Link
                         to="/#"
                         className="dropdown-item dropdown-toggle arrow-none"
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault();
                           setemail(!email);
                         }}
@@ -273,13 +344,12 @@ const Navbar = props => {
                       <Link
                         to="/#"
                         className="dropdown-item dropdown-toggle arrow-none"
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault();
                           setinvoice(!invoice);
                         }}
                       >
-                        {props.t("Invoices")}{" "}
-                        <div className="arrow-down"></div>
+                        {props.t("Invoices")} <div className="arrow-down"></div>
                       </Link>
                       <div
                         className={classname("dropdown-menu", {
@@ -289,10 +359,7 @@ const Navbar = props => {
                         <Link to="/invoices-list" className="dropdown-item">
                           {props.t("Invoice List")}
                         </Link>
-                        <Link
-                          to="/invoices-detail"
-                          className="dropdown-item"
-                        >
+                        <Link to="/invoices-detail" className="dropdown-item">
                           {props.t("Invoice Detail")}
                         </Link>
                       </div>
@@ -302,7 +369,7 @@ const Navbar = props => {
                       <Link
                         to="/#"
                         className="dropdown-item dropdown-toggle arrow-none"
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault();
                           setcontact(!contact);
                         }}
@@ -310,7 +377,105 @@ const Navbar = props => {
                         {props.t("Contacts")} <div className="arrow-down"></div>
                       </Link>
                       <div
-                        className={classname("dropdown-menu", { show: contact })}
+                        className={classname("dropdown-menu", {
+                          show: contact,
+                        })}
+                      >
+                        <Link to="/contacts-grid" className="dropdown-item">
+                          {props.t("User Grid")}
+                        </Link>
+                        <Link to="/contacts-list" className="dropdown-item">
+                          {props.t("User List")}
+                        </Link>
+                        <Link to="/contacts-profile" className="dropdown-item">
+                          {props.t("Profile")}
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+                <li className="nav-item dropdown">
+                  <Link
+                    to="/#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setapp(!app);
+                    }}
+                    className="nav-link dropdown-togglez arrow-none"
+                  >
+                    <FeatherIcon icon="grid" />
+                    {props.t("Apps")} <div className="arrow-down"></div>
+                  </Link>
+                  <div className={classname("dropdown-menu", { show: app })}>
+                    <Link to="/apps-calendar" className="dropdown-item">
+                      {props.t("Calendar")}
+                    </Link>
+                    <Link to="/apps-chat" className="dropdown-item">
+                      {props.t("Chat")}
+                    </Link>
+                    <div className="dropdown">
+                      <Link
+                        to="/#"
+                        className="dropdown-item dropdown-toggle arrow-none"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setemail(!email);
+                        }}
+                      >
+                        {props.t("Email")} <div className="arrow-down"></div>
+                      </Link>
+                      <div
+                        className={classname("dropdown-menu", { show: email })}
+                      >
+                        <Link to="/email-inbox" className="dropdown-item">
+                          {props.t("Inbox")}
+                        </Link>
+                        <Link to="/email-read" className="dropdown-item">
+                          {props.t("Read Email")}
+                        </Link>
+                      </div>
+                    </div>
+                    <div className="dropdown">
+                      <Link
+                        to="/#"
+                        className="dropdown-item dropdown-toggle arrow-none"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setinvoice(!invoice);
+                        }}
+                      >
+                        {props.t("Invoices")} <div className="arrow-down"></div>
+                      </Link>
+                      <div
+                        className={classname("dropdown-menu", {
+                          show: invoice,
+                        })}
+                      >
+                        <Link to="/invoices-list" className="dropdown-item">
+                          {props.t("Invoice List")}
+                        </Link>
+                        <Link to="/invoices-detail" className="dropdown-item">
+                          {props.t("Invoice Detail")}
+                        </Link>
+                      </div>
+                    </div>
+
+                    <div className="dropdown">
+                      <Link
+                        to="/#"
+                        className="dropdown-item dropdown-toggle arrow-none"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setcontact(!contact);
+                        }}
+                      >
+                        {props.t("Contacts")} <div className="arrow-down"></div>
+                      </Link>
+                      <div
+                        className={classname("dropdown-menu", {
+                          show: contact,
+                        })}
                       >
                         <Link to="/contacts-grid" className="dropdown-item">
                           {props.t("User Grid")}
@@ -330,14 +495,12 @@ const Navbar = props => {
                   <Link
                     to="/#"
                     className="nav-link dropdown-toggle arrow-none"
-                    onClick={e => {
+                    onClick={(e) => {
                       e.preventDefault();
                       setcomponent(!component);
                     }}
                   >
-                    <FeatherIcon
-                      icon="box"
-                    />
+                    <FeatherIcon icon="box" />
                     {props.t("Components")} <div className="arrow-down"></div>
                   </Link>
                   <div
@@ -347,7 +510,7 @@ const Navbar = props => {
                       <Link
                         to="/#"
                         className="dropdown-item dropdown-toggle arrow-none"
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault();
                           setform(!form);
                         }}
@@ -384,7 +547,7 @@ const Navbar = props => {
                       <Link
                         to="/#"
                         className="dropdown-item dropdown-toggle arrow-none"
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault();
                           settable(!table);
                         }}
@@ -412,7 +575,7 @@ const Navbar = props => {
                       <Link
                         to="/#"
                         className="dropdown-item dropdown-toggle arrow-none"
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault();
                           setchart(!chart);
                         }}
@@ -443,7 +606,7 @@ const Navbar = props => {
                       <Link
                         to="/#"
                         className="dropdown-item dropdown-toggle arrow-none"
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault();
                           seticon(!icon);
                         }}
@@ -474,7 +637,7 @@ const Navbar = props => {
                       <Link
                         to="/#"
                         className="dropdown-item dropdown-toggle arrow-none"
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault();
                           setmap(!map);
                         }}
@@ -502,14 +665,12 @@ const Navbar = props => {
                   <Link
                     className="nav-link dropdown-toggle arrow-none"
                     to="/#"
-                    onClick={e => {
+                    onClick={(e) => {
                       e.preventDefault();
                       setextra(!extra);
                     }}
                   >
-                    <FeatherIcon
-                      icon="file-text"
-                    />
+                    <FeatherIcon icon="file-text" />
                     {props.t("Extra Pages")} <div className="arrow-down"></div>
                   </Link>
                   <div className={classname("dropdown-menu", { show: extra })}>
@@ -517,7 +678,7 @@ const Navbar = props => {
                       <Link
                         to="/#"
                         className="dropdown-item dropdown-toggle arrow-none"
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault();
                           setinvoice(!invoice);
                         }}
@@ -542,7 +703,7 @@ const Navbar = props => {
                       <Link
                         to="/#"
                         className="dropdown-item dropdown-toggle arrow-none"
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault();
                           setauth(!auth);
                         }}
@@ -590,7 +751,7 @@ const Navbar = props => {
                       <Link
                         className="dropdown-item dropdown-toggle arrow-none"
                         to="/#"
-                        onClick={e => {
+                        onClick={(e) => {
                           e.preventDefault();
                           setutility(!utility);
                         }}
@@ -646,11 +807,11 @@ Navbar.propTypes = {
   t: PropTypes.any,
 };
 
-const mapStatetoProps = state => {
+const mapStatetoProps = (state) => {
   const { leftMenu } = state.Layout;
   return { leftMenu };
 };
 
-export default
-  withRouter(connect(mapStatetoProps, {})(withTranslation()(Navbar))
-  );
+export default withRouter(
+  connect(mapStatetoProps, {})(withTranslation()(Navbar))
+);
