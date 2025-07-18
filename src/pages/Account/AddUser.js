@@ -1,90 +1,125 @@
 import React, { useEffect, useState } from "react";
 import {
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Container,
-  Row,
-  Label,
-  Input,
-  Button,
-  FormFeedback,
+  Card, CardBody, CardHeader, Col, Container,
+  Row, Label, Input, Button, FormFeedback,
 } from "reactstrap";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-import { getData, postData } from "../../helpers/api";
+import { postData, getData } from "../../helpers/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { LoaderHide, LoaderShow } from "../../helpers/common.constants";
+import loader from "../../assets/images/instaone-loader.svg";
 
-// IP regex (accepts IP or CIDR)
-const ipRegex =
-  /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}(\/([0-9]|[1-2][0-9]|3[0-2]))?$/;
 
-// Validation schema
+const permissionApis = {
+  account: "/members/options/account",
+  group: "/members/options/group",
+  organization: "/members/options/organization",
+};
+
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  description: Yup.string(),
-  group: Yup.string(),
-  encryptionMethod: Yup.string().required("Encryption method is required"),
-  vxlanPort: Yup.number()
-    .typeError("Port must be a number")
-    .min(1, "Port must be >= 1")
-    .max(65535, "Port must be <= 65535")
-    .required("VXLAN port is required"),
-  tunnelRange: Yup.string()
-    .matches(ipRegex, "Invalid IP or CIDR format")
-    .required("Tunnel range is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  jobTitle: Yup.string(),
+  permission: Yup.string().oneOf(["account", "group", "organization"]).required("Permission is required"),
+  entity: Yup.string().required("Entity is required"),
+  role: Yup.string().oneOf(["owner", "viewer"]).required("Role is required"),
 });
 
 const AddUser = () => {
   const navigate = useNavigate();
-
-  document.title = "Add Organization | Minia React Template";
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getData("/members/options/account");
-        console.log("response=======", response);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const [loadingTargets, setLoadingTargets] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      description: "",
-      group: "",
-      encryptionMethod: "ikev2",
-      vxlanPort: 4789,
-      tunnelRange: "",
+      email: "",
+      firstName: "",
+      lastName: "",
+      jobTitle: "",
+      permission: "account",
+      entity: "",
+      role: "owner",
     },
     validationSchema,
     onSubmit: async (values) => {
       try {
-        console.log("Submitted Values:==", values);
-        const response = await postData("/organizations", values);
-        console.log("Response from API:===", response);
-        toast.success("Organization created successfully!");
-        navigate("/organizations"); // or wherever you want to redirect
-      } catch (error) {
-        console.error("Error submitting form:", error);
-        toast.error("Failed to create organization");
-        return;
+        LoaderShow()
+        const data = {
+          email: values.email,
+          userFirstName: values.firstName,
+          userLastName: values.lastName,
+          userPermissionTo: values.permission,
+          userEntity: values.entity,
+          userRole: values.role,
+          userJobTitle: values.jobTitle,
+        };
+
+        await postData("/members", data);
+        LoaderHide()
+        toast.success("User added successfully!");
+        navigate("/users");
+      } catch (err) {
+        LoaderHide()
+        console.error(err);
+        toast.error("Failed to add user.");
       }
     },
   });
 
-  const { values, handleChange, handleSubmit, errors, touched } = formik;
+  const { values, handleChange, handleSubmit, errors, touched, setFieldValue } = formik;
+
+  useEffect(() => {
+    fetchAndSetEntity(values.permission);
+  }, []);
+
+  const fetchAndSetEntity = async (permission) => {
+    setLoadingTargets(true);
+    try {
+      LoaderShow()
+      const response = await getData(permissionApis[permission]);
+      LoaderHide()
+      const entityName = response?.[0]?.value || "";
+      setFieldValue("entity", entityName); // Set entity inside formik
+    } catch (err) {
+      console.error("Error fetching entity:", err);
+      toast.error("Failed to load entity.");
+      setFieldValue("entity", "");
+    } finally {
+      LoaderHide()
+      setLoadingTargets(false);
+    }
+  };
+
+  const handlePermissionChange = async (e) => {
+    const permission = e.target.value;
+    setFieldValue("permission", permission);
+    await fetchAndSetEntity(permission);
+  };
 
   return (
     <div className="page-content">
+      <div
+        id="hideloding"
+        className="loding-display"
+        style={{
+          display: "none",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          backgroundColor: "rgba(255,255,255,0.7)",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 9999,
+          display: "flex",
+        }}
+      >
+        <img src={loader} alt="loader-img" style={{ width: "100px", height: "100px" }} />
+      </div>
       <Container fluid>
         <Breadcrumbs title="Forms" breadcrumbItem="Add User" />
         <Row>
@@ -97,112 +132,112 @@ const AddUser = () => {
                 <form onSubmit={handleSubmit}>
                   <Row>
                     <Col md={6}>
-                      {/* Name */}
+                      {/* Email */}
                       <div className="mb-3">
-                        <Label htmlFor="name">Name</Label>
+                        <Label>Email</Label>
                         <Input
-                          id="name"
-                          name="name"
-                          type="text"
-                          value={values.name}
+                          type="email"
+                          name="email"
+                          value={values.email}
                           onChange={handleChange}
-                          invalid={touched.name && !!errors.name}
+                          invalid={touched.email && !!errors.email}
                         />
-                        <FormFeedback>{errors.name}</FormFeedback>
+                        <FormFeedback>{errors.email}</FormFeedback>
                       </div>
 
-                      {/* Description */}
+                      {/* First Name */}
                       <div className="mb-3">
-                        <Label htmlFor="description">Description</Label>
+                        <Label>First Name</Label>
                         <Input
-                          id="description"
-                          name="description"
-                          type="text"
-                          value={values.description}
+                          name="firstName"
+                          value={values.firstName}
                           onChange={handleChange}
-                          invalid={touched.description && !!errors.description}
+                          invalid={touched.firstName && !!errors.firstName}
                         />
-                        <FormFeedback>{errors.description}</FormFeedback>
+                        <FormFeedback>{errors.firstName}</FormFeedback>
                       </div>
 
-                      {/* Group */}
+                      {/* Last Name */}
                       <div className="mb-3">
-                        <Label htmlFor="group">Group</Label>
+                        <Label>Last Name</Label>
                         <Input
-                          id="group"
-                          name="group"
-                          type="text"
-                          value={values.group}
+                          name="lastName"
+                          value={values.lastName}
                           onChange={handleChange}
-                          invalid={touched.group && !!errors.group}
+                          invalid={touched.lastName && !!errors.lastName}
                         />
-                        <FormFeedback>{errors.group}</FormFeedback>
+                        <FormFeedback>{errors.lastName}</FormFeedback>
                       </div>
                     </Col>
 
                     <Col md={6}>
-                      {/* Encryption Method */}
+                      {/* Job Title */}
                       <div className="mb-3">
-                        <Label htmlFor="encryptionMethod">
-                          Encryption Method
-                        </Label>
+                        <Label>Job Title</Label>
                         <Input
-                          id="encryptionMethod"
-                          name="encryptionMethod"
+                          name="jobTitle"
+                          value={values.jobTitle}
+                          onChange={handleChange}
+                          invalid={touched.jobTitle && !!errors.jobTitle}
+                        />
+                        <FormFeedback>{errors.jobTitle}</FormFeedback>
+                      </div>
+
+                      {/* Permission */}
+                      <div className="mb-3">
+                        <Label>Permission</Label>
+                        <Input
                           type="select"
-                          value={values.encryptionMethod}
-                          onChange={handleChange}
-                          invalid={
-                            touched.encryptionMethod &&
-                            !!errors.encryptionMethod
-                          }
+                          name="permission"
+                          value={values.permission}
+                          onChange={handlePermissionChange}
+                          invalid={touched.permission && !!errors.permission}
                         >
-                          <option value="ikev2">ikev2</option>
-                          <option value="ikev1">ikev1</option>
-                          <option value="openvpn">OpenVPN</option>
+                          <option value="account">Account</option>
+                          <option value="group">Group</option>
+                          <option value="organization">Organization</option>
                         </Input>
-                        <FormFeedback>{errors.encryptionMethod}</FormFeedback>
+                        <FormFeedback>{errors.permission}</FormFeedback>
                       </div>
 
-                      {/* VXLAN Port */}
+                      {/* Entity (disabled input) */}
                       <div className="mb-3">
-                        <Label htmlFor="vxlanPort">VXLAN Port</Label>
+                        <Label>Entity</Label>
                         <Input
-                          id="vxlanPort"
-                          name="vxlanPort"
-                          type="number"
-                          value={values.vxlanPort}
-                          onChange={handleChange}
-                          invalid={touched.vxlanPort && !!errors.vxlanPort}
-                        />
-                        <FormFeedback>{errors.vxlanPort}</FormFeedback>
-                      </div>
-
-                      {/* Tunnel Range */}
-                      <div className="mb-3">
-                        <Label htmlFor="tunnelRange">
-                          Tunnel Range (e.g. 10.100.0.0/16)
-                        </Label>
-                        <Input
-                          id="tunnelRange"
-                          name="tunnelRange"
                           type="text"
-                          value={values.tunnelRange}
-                          onChange={handleChange}
-                          invalid={touched.tunnelRange && !!errors.tunnelRange}
+                          name="entity"
+                          value={values.entity}
+                          disabled
+                          invalid={touched.entity && !!errors.entity}
                         />
-                        <FormFeedback>{errors.tunnelRange}</FormFeedback>
+                        <FormFeedback>{errors.entity}</FormFeedback>
                       </div>
-                    </Col>
 
-                    <Col xs={12}>
-                      <div className="text-end">
-                        <Button color="primary" type="submit">
-                          Submit
-                        </Button>
+                      {/* Role */}
+                      <div className="mb-3">
+                        <Label>Role</Label>
+                        <Input
+                          type="select"
+                          name="role"
+                          value={values.role}
+                          onChange={handleChange}
+                          invalid={touched.role && !!errors.role}
+                        >
+                          <option value="owner">Owner</option>
+                          <option value="viewer">Viewer</option>
+                        </Input>
+                        <FormFeedback>{errors.role}</FormFeedback>
                       </div>
                     </Col>
                   </Row>
+
+                  <Col xs={12}>
+                    <div className="text-end mt-3">
+                      <Button color="primary" type="submit">
+                        Add User
+                      </Button>
+                    </div>
+                  </Col>
                 </form>
               </CardBody>
             </Card>

@@ -55,13 +55,10 @@ const FormElements = () => {
     validationSchema,
     onSubmit: async (values) => {
       try {
-        console.log("Submitted Values:==", values);
         const response = await postData("/organizations", values);
-        console.log("Response from API:===", response);
         toast.success("Organization created successfully!");
         navigate("/organizations"); // or wherever you want to redirect
       } catch (error) {
-        console.error("Error submitting form:", error);
         toast.error("Failed to create organization");
         return;
       }
@@ -145,8 +142,6 @@ const FormElements = () => {
                           }
                         >
                           <option value="ikev2">ikev2</option>
-                          <option value="ikev1">ikev1</option>
-                          <option value="openvpn">OpenVPN</option>
                         </Input>
                         <FormFeedback>{errors.encryptionMethod}</FormFeedback>
                       </div>

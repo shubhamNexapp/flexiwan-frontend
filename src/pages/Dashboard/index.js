@@ -13,6 +13,8 @@ import {
     Row
 } from "reactstrap";
 
+
+
 import CountUp from "react-countup";
 
 /** import Mini Widget data */
@@ -25,6 +27,19 @@ import Trading from './Trading';
 import Transactions from './Transactions';
 import RecentActivity from './RecentActivity';
 import NewSlider from './NewSlider';
+
+import Leaflet from "leaflet"
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
+import "leaflet/dist/leaflet.css"
+
+Leaflet.Icon.Default.imagePath = "../node_modules/leaflet"
+
+delete Leaflet.Icon.Default.prototype._getIconUrl
+
+Leaflet.Icon.Default.mergeOptions({
+    iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png'
+})
 
 const options = {
     chart: {
@@ -81,66 +96,40 @@ const Dashboard = () => {
     //meta title
     document.title = "Dashboard | Minia - React Admin & Dashboard Template";
 
+
+    const position = {
+        lat: 51.505,
+        lng: -0.09,
+        zoom: 13,
+    }
+
     return (
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
                     {/* Render Breadcrumbs */}
                     <Breadcrumbs title="Dashboard" breadcrumbItem="Dashboard" />
+                    <h4 className="card-title">Markers with Custom Icons</h4>
+                    <div id="leaflet-map-custom-icons" className="leaflet-map">
+                        <MapContainer
+                            center={position}
+                            zoom={position.zoom}
+                            style={{ height: "300px" }}
+                        >
+                            <TileLayer
+                                attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
+                            <Marker position={position}>
+                                <Popup>
+                                    A pretty CSS3 popup. <br /> Easily customizable.
+                                </Popup>
+                            </Marker>
+                        </MapContainer>
+                    </div>
 
-                    <Row>
-                        {(WidgetsData || []).map((widget, key) => (
-                            <Col xl={3} md={6} key={key}>
-                                <Card className="card-h-100">
-                                    <CardBody>
-                                        <Row className="align-items-center">
-                                            <Col xs={6}>
-                                                <span className="text-muted mb-3 lh-1 d-block text-truncate">
-                                                    {widget.title}
-                                                </span>
-                                                <h4 className="mb-3">
-                                                    {widget.isDoller === true ? "$" : ""}
-                                                    <span className="counter-value">
-                                                        <CountUp
-                                                            start={0}
-                                                            end={widget.price}
-                                                            duration={2}
-                                                            // decimals={2}
-                                                            separator=""
-                                                        />
-                                                        {widget.postFix}
-                                                    </span>
-                                                </h4>
-                                            </Col>
-                                            <Col xs={6}>
-                                                <ReactApexChart
-                                                    options={options}
-                                                    series={[{ data: [...widget["series"]] }]}
-                                                    type="line"
-                                                    className="apex-charts mb-2"
-                                                    dir="ltr"
-                                                    height={50}
-                                                />
-                                            </Col>
-                                        </Row>
-                                        <div className="text-nowrap">
-                                            <span
-                                                className={
-                                                    "badge bg-" +
-                                                    widget.statusColor +
-                                                    "-subtle text-" +
-                                                    widget.statusColor
-                                                }
-                                            >
-                                                {widget.rank}
-                                            </span>
-                                            <span className="ms-1 text-muted font-size-13"> Since last week
-                                            </span>
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                        ))}
+                    {/* <Row>
+                       
 
                     </Row>
                     <Row>
@@ -160,7 +149,7 @@ const Dashboard = () => {
                         <Trading />
                         <Transactions />
                         <RecentActivity />
-                    </Row>
+                    </Row> */}
                 </Container>
             </div>
         </React.Fragment>

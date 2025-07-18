@@ -15,9 +15,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { getData, putData } from "../../helpers/api";
 import axios from "axios";
+import { LoaderHide, LoaderShow } from "../../helpers/common.constants";
+import loader from "../../assets/images/instaone-loader.svg";
 
 // Validation Schema
 const validationSchema = Yup.object().shape({
@@ -27,7 +28,6 @@ const validationSchema = Yup.object().shape({
 
 const AccountProfile = () => {
   const accountId = "6874b3d1d712a564f6081801";
-  const [loading, setLoading] = useState(true);
 
   const formik = useFormik({
     initialValues: {
@@ -37,17 +37,19 @@ const AccountProfile = () => {
     validationSchema,
     onSubmit: async (values) => {
       try {
+        LoaderShow()
         const payload = {
           name: values.companyName,
           country: values.country,
         };
-
         await putData(`/accounts/${accountId}`, payload);
         toast.success("Account updated successfully!");
+        LoaderHide()
       } catch (error) {
-        console.error(error);
+        LoaderHide()
         toast.error("Failed to update account.");
       }
+      LoaderHide()
     },
   });
   const [countries, setCountries] = useState([]);
@@ -56,6 +58,7 @@ const AccountProfile = () => {
   useEffect(() => {
     const fetchAccount = async () => {
       try {
+        LoaderShow()
         const fetchCountryData = await axios.get(
           "https://restcountries.com/v3.1/all?fields=name,cca2"
         );
@@ -71,33 +74,48 @@ const AccountProfile = () => {
           companyName: response.name || "",
           country: response.country || "", // ✅ Corrected here
         });
+        LoaderHide()
       } catch (error) {
+        LoaderHide()
         console.error("Error fetching account data:", error);
-        toast.error("Failed to fetch account data.");
       } finally {
-        setLoading(false);
+        LoaderHide()
       }
     };
 
     fetchAccount();
   }, []);
 
-  console.log("countries=====", countries);
-  console.log("formik values=====", formik.values);
-
   const { values, handleChange, handleSubmit, errors, touched } = formik;
-
-  if (loading) return <div className="p-4">Loading...</div>;
 
   return (
     <div className="page-content">
+      <div
+        id="hideloding"
+        className="loding-display"
+        style={{
+          display: "none",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          backgroundColor: "rgba(255,255,255,0.7)",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 9999,
+          display: "flex",
+        }}
+      >
+        <img src={loader} alt="loader-img" style={{ width: "100px", height: "100px" }} />
+      </div>
       <Container fluid>
-        <Breadcrumbs title="Forms" breadcrumbItem="Edit Account" />
+        <Breadcrumbs title="Forms" breadcrumbItem="Account Profile" />
         <Row>
           <Col xs={12}>
             <Card>
-              <CardHeader>
-                <h4>Edit Account</h4>
+              <CardHeader className="d-flex justify-content-between align-items-center">
+                <h4 className="card-title mb-0">Account Profile</h4>
               </CardHeader>
               <CardBody>
                 <form onSubmit={handleSubmit}>

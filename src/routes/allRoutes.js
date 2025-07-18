@@ -119,18 +119,20 @@ import AddOrganizations from "../pages/Account/AddOrganization";
 import EditOrganization from "../pages/Account/EditOrganization";
 import AccountProfile from "../pages/Account/AccountProfile";
 import AddUser from "../pages/Account/AddUser";
+import EditUser from "../pages/Users/EditUser";
 
 const userRoutes = [
   //dashboard
   { path: "/dashboard", component: <Dashboard /> },
 
-  //Calendar
+  //Users
   { path: "/users", component: <UsersTable /> },
+  { path: "/add-user", component: <AddUser /> },
+  { path: "/edit-user/:id", component: <EditUser /> },
 
   //Account
   { path: "/organizations", component: <Organizations /> },
   { path: "/add-organizations", component: <AddOrganizations /> },
-  { path: "/add-user", component: <AddUser /> },
   { path: "/edit-organization/:id", component: <EditOrganization /> },
   { path: "/account-profile", component: <AccountProfile /> },
 

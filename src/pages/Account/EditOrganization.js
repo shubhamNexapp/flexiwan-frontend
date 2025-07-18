@@ -133,8 +133,6 @@ const EditOrganization = () => {
                           }
                         >
                           <option value="ikev2">ikev2</option>
-                          <option value="ikev1">ikev1</option>
-                          <option value="openvpn">OpenVPN</option>
                         </Input>
                         <FormFeedback>{errors.encryptionMethod}</FormFeedback>
                       </div>

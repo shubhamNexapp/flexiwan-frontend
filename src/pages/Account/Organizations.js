@@ -19,6 +19,9 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { deleteData, getData } from "../../helpers/api.js";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { LoaderHide, LoaderShow } from "../../helpers/common.constants.js";
+import loader from "../../assets/images/instaone-loader.svg";
+
 
 // Global Search Input
 function GlobalFilter({
@@ -140,8 +143,9 @@ function Organizations() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        LoaderShow()
         const response = await getData("/organizations");
-
+        LoaderHide()
         const formattedData = response.map((organization) => ({
           id: organization._id,
           name: organization.name || "-",
@@ -156,25 +160,26 @@ function Organizations() {
 
         setTableData(formattedData);
       } catch (error) {
-        // toast.error(
-        //   error?.response?.data?.error || "Failed to fetch organizations"
-        // );
+        LoaderHide()
         console.error("Error fetching data:", error);
       }
+      LoaderHide()
     };
-
     fetchData();
   }, []);
 
   const deleteOrganization = async (id) => {
     try {
+      LoaderShow()
       const response = await deleteData(`/organizations/${id}`, {
         method: "DELETE",
       });
+      LoaderHide()
       setmodal_standard(false);
       fetchData()
       toast.success("Organization deleted successfully");
     } catch (error) {
+      LoaderHide()
       toast.error("Error deleting organization");
       console.error("Error deleting organization:", error);
     }
@@ -228,13 +233,33 @@ function Organizations() {
 
   return (
     <div className="page-content">
+       <div
+        id="hideloding"
+        className="loding-display"
+        style={{
+          display: "none",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          backgroundColor: "rgba(255,255,255,0.7)",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 9999,
+          display: "flex",
+        }}
+      >
+        <img src={loader} alt="loader-img" style={{ width: "100px", height: "100px" }} />
+      </div>
       <Container fluid>
         <Breadcrumbs title="Tables" breadcrumbItem="Organizations List" />
         <Row>
           <Col className="col-12">
             <Card>
               <CardBody>
-                <CardHeader>
+                <CardHeader className="d-flex justify-content-between align-items-center">
+                  <h4 className="card-title mb-0">Organizations</h4>
                   <Link
                     className="nav-link dropdown-toggle arrow-none"
                     to="/add-organizations"

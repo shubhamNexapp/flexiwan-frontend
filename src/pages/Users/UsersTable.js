@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
   useTable,
   useFilters,
   useGlobalFilter,
   useAsyncDebounce,
 } from "react-table";
-  
-import { Card, CardBody, Col, Container, Row ,CardHeader} from "reactstrap";
+import {
+  Card,
+  CardBody,
+  Col,
+  Container,
+  Row,
+  CardHeader,
+  Modal,
+} from "reactstrap";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-import { getData } from "../../helpers/api";
-import { toast } from "react-toastify";
+import { deleteData, getData } from "../../helpers/api";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { LoaderHide, LoaderShow } from "../../helpers/common.constants";
+import loader from "../../assets/images/instaone-loader.svg";
 
 
 // Global Search Input
@@ -22,8 +30,9 @@ function GlobalFilter({
 }) {
   const count = preGlobalFilteredRows.length;
   const [value, setValue] = useState(globalFilter);
-  const onChange = useAsyncDebounce((value) => {
-    setGlobalFilter(value || undefined);
+
+  const onChange = useAsyncDebounce((val) => {
+    setGlobalFilter(val || undefined);
   }, 200);
 
   return (
@@ -41,29 +50,11 @@ function GlobalFilter({
   );
 }
 
-// Column Filter Input
-function DefaultColumnFilter({
-  column: { filterValue, preFilteredRows, setFilter },
-}) {
-  const count = preFilteredRows.length;
-  return (
-    <input
-      className="mt-2 form-control"
-      value={filterValue || ""}
-      onChange={(e) => setFilter(e.target.value || undefined)}
-      placeholder={`Search ${count} records...`}
-    />
-  );
-}
-
-// Table Component
+// Table component
 function Table({ columns, data }) {
-  const defaultColumn = React.useMemo(
-    () => ({
-      Filter: DefaultColumnFilter,
-    }),
-    []
-  );
+  const defaultColumn = React.useMemo(() => ({
+    Filter: () => null, // Disable individual column filters
+  }), []);
 
   const {
     getTableProps,
@@ -88,10 +79,7 @@ function Table({ columns, data }) {
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
               {headerGroup.headers.map((column) => (
-                <th key={column.id}>
-                  {column.render("Header")}
-                  {/* <div>{column.canFilter ? column.render("Filter") : null}</div> */}
-                </th>
+                <th key={column.id}>{column.render("Header")}</th>
               ))}
             </tr>
           ))}
@@ -115,87 +103,206 @@ function Table({ columns, data }) {
   );
 }
 
-// Main Page
+// Main Component
 function DatatableTables() {
   const [tableData, setTableData] = useState([]);
+  const [modal_standard, setmodal_standard] = useState(false);
+  const [selectedOrgId, setSelectedOrgId] = useState(null);
+
+  function removeBodyCss() {
+    document.body.classList.add("no_padding");
+  }
+
+  function tog_standard(id) {
+    setmodal_standard(!modal_standard);
+    setSelectedOrgId(id);
+    removeBodyCss();
+  }
+
+  const fetchMembers = async () => {
+    try {
+      LoaderShow()
+      const response = await getData("/members");
+      LoaderHide()
+      const formatted = response.map((member) => {
+        let entity = "-";
+        if (member.group) {
+          entity = member.group;
+        } else if (member.organization_name) {
+          entity = member.organization_name;
+        } else if (member.account_name) {
+          entity = member.account_name;
+        }
+
+        return {
+          id: member._id,
+          name: member.user_name || "-",
+          email: member.user_email || "-",
+          permission: member.to || "-",
+          entity,
+          role: member.role || "-",
+        };
+      });
+
+      setTableData(formatted);
+      LoaderHide()
+    } catch (error) {
+      LoaderHide()
+      console.error("Failed to load member data:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getData("/members");
-
-        const formattedData = response.map((member) => ({
-          user_name: member.user_name || "-",
-          user_email: member.user_email || "-",
-          account_name: member.account_name || "-",
-          role: member.role || "-",
-        }));
-
-        setTableData(formattedData);
-      } catch (error) {
-        toast.error(
-          error?.response?.data?.error || "Failed to fetch users"
-        );
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
+    fetchMembers();
   }, []);
 
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "User Name",
-        accessor: "user_name",
-      },
-      {
-        Header: "Email",
-        accessor: "user_email",
-      },
-      {
-        Header: "Account",
-        accessor: "account_name",
-      },
-      {
-        Header: "Role",
-        accessor: "role",
-      },
-    ],
-    []
-  );
+  const deleteUser = async (id) => {
+    try {
+      LoaderShow()
+      const response = await deleteData(`/members/${id}`, {
+        method: "DELETE",
+      });
+      LoaderHide()
+      setmodal_standard(false);
+      fetchMembers()
+      toast.success("Organization deleted successfully");
+    } catch (error) {
+      LoaderHide()
+      toast.error("Error deleting organization");
+      console.error("Error deleting organization:", error);
+    }
+  };
 
-  document.title = "Data Tables | FlexiWAN Members";
+  const columns = React.useMemo(() => [
+    { Header: "Name", accessor: "name" },
+    { Header: "Email", accessor: "email" },
+    { Header: "Permission To", accessor: "permission" },
+    { Header: "Entity", accessor: "entity" },
+    { Header: "Role", accessor: "role" },
+    {
+      Header: "Actions",
+      Cell: ({ row }) => (
+        <div className="d-flex gap-2">
+          <Link
+            to={`/edit-user/${row.original.id}`}
+            state={{ orgData: row.original }}
+            className="btn btn-sm btn-warning"
+          >
+            Edit
+          </Link>
+          <button
+            className="btn btn-sm btn-danger"
+            onClick={() => {
+              tog_standard(row.original.id);
+            }}
+          >
+            Delete
+          </button>
+        </div>
+      ),
+    },
+  ], []);
+
+  document.title = "User List | FlexiWAN Members";
 
   return (
     <div className="page-content">
+      <div
+        id="hideloding"
+        className="loding-display"
+        style={{
+          display: "none",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          backgroundColor: "rgba(255,255,255,0.7)",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 9999,
+          display: "flex",
+        }}
+      >
+        <img src={loader} alt="loader-img" style={{ width: "100px", height: "100px" }} />
+      </div>
       <Container fluid>
         <Breadcrumbs title="Tables" breadcrumbItem="Users List" />
         <Row>
           <Col className="col-12">
             <Card>
-              <CardBody>
-                <CardHeader>
-                  <Link
-                    className="nav-link dropdown-toggle arrow-none"
-                    to="/add-user"
+              <CardHeader className="d-flex justify-content-between align-items-center">
+                <h4 className="card-title mb-0">Users</h4>
+                <Link to="/add-user">
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary waves-effect waves-light"
                   >
-                    <button
-                      type="button"
-                      className="btn btn-outline-primary waves-effect waves-light"
-                    >
-                      Add
-                      <i className="mdi mdi-plus-circle ms-1"></i>
-                    </button>
-                  </Link>
-                  {/* <h4 className="card-title">Add Organization</h4> */}
-                </CardHeader>
+                    Add <i className="mdi mdi-plus-circle ms-1"></i>
+                  </button>
+                </Link>
+              </CardHeader>
+              <CardBody>
                 <Table columns={columns} data={tableData} />
               </CardBody>
             </Card>
           </Col>
         </Row>
       </Container>
+      <Col lg={6}>
+        <div>
+          <Modal
+            isOpen={modal_standard}
+            toggle={() => {
+              tog_standard();
+            }}
+          >
+            <div className="modal-header">
+              <h5 className="modal-title mt-0" id="myModalLabel">
+                Modal Heading
+              </h5>
+              <button
+                type="button"
+                onClick={() => {
+                  setmodal_standard(false);
+                }}
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <h5>Overflowing text to show scroll behavior</h5>
+              <p>
+                Cras mattis consectetur purus sit amet fermentum. Cras justo
+                odio, dapibus ac facilisis in, egestas eget quam. Morbi leo
+                risus, porta ac consectetur ac, vestibulum at eros.
+              </p>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                onClick={() => {
+                  tog_standard();
+                }}
+                className="btn btn-secondary "
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => deleteUser(selectedOrgId)}
+                type="button"
+                className="btn btn-primary "
+              >
+                Save changes
+              </button>
+            </div>
+          </Modal>
+        </div>
+      </Col>
     </div>
   );
 }
