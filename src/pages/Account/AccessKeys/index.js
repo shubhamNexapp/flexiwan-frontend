@@ -12,15 +12,14 @@ import {
   Container,
   Row,
   CardHeader,
-  CardTitle,
   Modal,
 } from "reactstrap";
-import Breadcrumbs from "../../components/Common/Breadcrumb";
-import { deleteData, getData } from "../../helpers/api.js";
+import Breadcrumbs from "../../../components/Common/Breadcrumb.js";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { LoaderHide, LoaderShow } from "../../helpers/common.constants.js";
-import loader from "../../assets/images/instaone-loader.svg";
+import loader from "../../../assets/images/instaone-loader.svg";
+import { deleteData, getData } from "../../../helpers/api.js";
+import { LoaderHide, LoaderShow } from "../../../helpers/common.constants.js";
 
 // Global Search Input
 function GlobalFilter({
@@ -124,7 +123,7 @@ function Table({ columns, data }) {
 }
 
 // Main Page
-function Organizations() {
+function AccessKeys() {
   const [tableData, setTableData] = useState([]);
   const [modal_standard, setmodal_standard] = useState(false);
   const [selectedOrgId, setSelectedOrgId] = useState(null);
@@ -146,18 +145,14 @@ function Organizations() {
   const fetchData = async () => {
     try {
       LoaderShow();
-      const response = await getData("/organizations");
+      const response = await getData("/accesstokens");
       LoaderHide();
-      const formattedData = response.map((organization) => ({
-        id: organization._id,
-        name: organization.name || "-",
-        account: organization.account || "-",
-        encryption_method: organization.encryptionMethod || "-",
-        vxlan_port: organization.vxlanPort || "-",
-        description: organization.description || "",
-        group: organization.group || "",
-        tunnelRange: organization.tunnelRange || "",
-        encryptionMethod: organization.encryptionMethod || "ikev2",
+      const formattedData = response.map((access) => ({
+        id: access._id,
+        name: access.name,
+        key: access.token,
+        to: access.to || "-",
+        role: access.role || "-",
       }));
 
       setTableData(formattedData);
@@ -168,20 +163,20 @@ function Organizations() {
     LoaderHide();
   };
 
-  const deleteOrganization = async (id) => {
+  const deleteToken = async (id) => {
     try {
       LoaderShow();
-      const response = await deleteData(`/organizations/${id}`, {
+      const response = await deleteData(`/accesstokens/${id}`, {
         method: "DELETE",
       });
+      setmodal_standard(false);
       LoaderHide();
       fetchData()
-      setmodal_standard(false);
-      toast.success("Organization deleted successfully");
+      toast.success("Access key deleted successfully");
     } catch (error) {
       LoaderHide();
       toast.error("Error deleting organization");
-      console.error("Error deleting organization:", error);
+      console.error("Error deleting accesstoken:", error);
     }
   };
 
@@ -192,36 +187,47 @@ function Organizations() {
         accessor: "name",
       },
       {
-        Header: "Description",
-        accessor: "description",
+        Header: "Key",
+        accessor: "key",
+        Cell: ({ value }) => (
+          <div
+            style={{
+              whiteSpace: "normal",
+              wordWrap: "break-word",
+              wordBreak: "break-all",
+            }}
+          >
+            {value}
+          </div>
+        ),
       },
       {
-        Header: "Encryption Method",
-        accessor: "encryption_method",
+        Header: "To",
+        accessor: "to",
       },
       {
-        Header: "Vxlan Port",
-        accessor: "vxlan_port",
+        Header: "Role",
+        accessor: "role",
       },
       {
         Header: "Actions",
         Cell: ({ row }) => (
-          <div className="d-flex gap-2">
-            <Link
-              to={`/edit-organization/${row.original.id}`}
-              state={{ orgData: row.original }}
-              className="btn btn-sm btn-warning"
-            >
-              Edit
-            </Link>
-            <button
-              className="btn btn-sm btn-danger"
+          <div className="d-flex flex-column flex-md-row gap-2">
+            {/* <button className="btn btn-sm btn-danger">Delete</button>
+            <button className="btn btn-sm btn-secondary">Copy</button> */}
+            <i
+              className="mdi mdi-content-copy"
+              style={{ cursor: "pointer" }}
               onClick={() => {
-                tog_standard(row.original.id);
+                navigator.clipboard.writeText(row.original.key);
+                toast.success("Token copied to clipboard!");
               }}
-            >
-              Delete
-            </button>
+            ></i>
+            <i
+              className="mdi mdi-delete"
+              style={{ cursor: "pointer" }}
+              onClick={() => tog_standard(row.original.id)}
+            ></i>
           </div>
         ),
       },
@@ -257,16 +263,16 @@ function Organizations() {
         />
       </div>
       <Container fluid>
-        <Breadcrumbs title="Tables" breadcrumbItem="Organizations List" />
+        <Breadcrumbs title="Tables" breadcrumbItem="Access Keys List" />
         <Row>
           <Col className="col-12">
             <Card>
               <CardBody>
                 <CardHeader className="d-flex justify-content-between align-items-center">
-                  <h4 className="card-title mb-0">Organizations</h4>
+                  <h4 className="card-title mb-0">Acces Keys</h4>
                   <Link
                     className="nav-link dropdown-toggle arrow-none"
-                    to="/add-organizations"
+                    to="/add-accesskey"
                   >
                     <button
                       type="button"
@@ -278,7 +284,6 @@ function Organizations() {
                   </Link>
                   {/* <h4 className="card-title">Add Organization</h4> */}
                 </CardHeader>
-
                 <Table columns={columns} data={tableData} />
               </CardBody>
             </Card>
@@ -295,7 +300,7 @@ function Organizations() {
           >
             <div className="modal-header">
               <h5 className="modal-title mt-0" id="myModalLabel">
-                Delete Organization
+                Delete Access Key
               </h5>
               <button
                 type="button"
@@ -310,7 +315,8 @@ function Organizations() {
               </button>
             </div>
             <div className="modal-body">
-              <p>Are you sure to delete organization?</p>
+              {/* <h5>Overflowing text to show scroll behavior</h5> */}
+              <p>Are you sure to delete access key?</p>
             </div>
             <div className="modal-footer">
               <button
@@ -324,7 +330,7 @@ function Organizations() {
                 Close
               </button>
               <button
-                onClick={() => deleteOrganization(selectedOrgId)}
+                onClick={() => deleteToken(selectedOrgId)}
                 type="button"
                 className="btn btn-primary "
               >
@@ -338,4 +344,4 @@ function Organizations() {
   );
 }
 
-export default Organizations;
+export default AccessKeys;

@@ -16,7 +16,7 @@ const axiosInstance = axios.create({
 
 // Attach token to headers
 axiosInstance.interceptors.request.use((config) => {
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODc0YjNkMWQ3MTJhNTY0ZjYwODE4MDMiLCJ0eXBlIjoiYXBwX2FjY2Vzc19rZXkiLCJhY2NvdW50IjoiNjg3NGIzZDFkNzEyYTU2NGY2MDgxODAxIiwiaWQiOiI2ODc4ZjdiNzAwODIzMjMxZmQ2M2JmYjMiLCJpYXQiOjE3NTI3NTgxOTl9.wAGOsyLQqMLwL1psc9shlJmGk2DQTafeZE_LQ_YOf5I"
+  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODc0YjNkMWQ3MTJhNTY0ZjYwODE4MDMiLCJ0eXBlIjoiYXBwX2FjY2Vzc19rZXkiLCJhY2NvdW50IjoiNjg3NGIzZDFkNzEyYTU2NGY2MDgxODAxIiwiaWQiOiI2ODdlMTgyMDZlY2QzZjFlNTczMjUzZjMiLCJpYXQiOjE3NTMwOTQxNzZ9.5vqgnCcA5uokHgzjSpfVYhLbq2QcQQBvuVTb0vVEpyE"
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

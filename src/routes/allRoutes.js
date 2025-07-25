@@ -120,6 +120,8 @@ import EditOrganization from "../pages/Account/EditOrganization";
 import AccountProfile from "../pages/Account/AccountProfile";
 import AddUser from "../pages/Account/AddUser";
 import EditUser from "../pages/Users/EditUser";
+import AccessKeys from "../pages/Account/AccessKeys/index";
+import AddTokens from "../pages/Account/AccessKeys/Add";
 
 const userRoutes = [
   //dashboard
@@ -132,6 +134,8 @@ const userRoutes = [
 
   //Account
   { path: "/organizations", component: <Organizations /> },
+  { path: "/accesskeys", component: <AccessKeys /> },
+  { path: "/add-accesskey", component: <AddTokens /> },
   { path: "/add-organizations", component: <AddOrganizations /> },
   { path: "/edit-organization/:id", component: <EditOrganization /> },
   { path: "/account-profile", component: <AccountProfile /> },
