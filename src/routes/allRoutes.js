@@ -122,6 +122,8 @@ import AddUser from "../pages/Account/AddUser";
 import EditUser from "../pages/Users/EditUser";
 import AccessKeys from "../pages/Account/AccessKeys/index";
 import AddTokens from "../pages/Account/AccessKeys/Add";
+import Devices from "../pages/Inventory/Devices";
+import DeviceDetails from "../pages/Inventory/DeviceDetails";
 
 const userRoutes = [
   //dashboard
@@ -139,6 +141,10 @@ const userRoutes = [
   { path: "/add-organizations", component: <AddOrganizations /> },
   { path: "/edit-organization/:id", component: <EditOrganization /> },
   { path: "/account-profile", component: <AccountProfile /> },
+
+  //Inventory
+  { path: "/devices", component: <Devices /> },
+  { path: "/device-details/:id", component: <DeviceDetails /> },
 
   //profile
   { path: "/profile", component: <UserProfile /> },
