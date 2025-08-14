@@ -1,95 +1,15 @@
 import React, { useState, useEffect } from "react";
-import {
-  Spinner,
-  Table,
-  Badge,
-  Input,
-  Label,
-  FormGroup,
-} from "reactstrap";
+import { Spinner } from "reactstrap";
 import { getData } from "../../../../helpers/api";
-import "bootstrap/dist/css/bootstrap.min.css";
-
-const DeviceOverview = ({ device }) => {
-  const [selectedIface, setSelectedIface] = useState(null);
-  const [selectedGW, setSelectedGW] = useState(null);
-
-  if (!device) return <Spinner />;
-
-  return (
-   
-      <Table bordered responsive hover className="align-middle text-center">
-        <thead className="thead-light">
-          <tr>
-            <th>Select</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Assigned</th>
-            <th>IPv4</th>
-            <th>GW</th>
-            <th>Metric</th>
-            <th>Public IP</th>
-            <th>Routing</th>
-          </tr>
-        </thead>
-        <tbody>
-          {device.interfaces.map((iface) => {
-            const route = device.staticroutes.find(
-              (r) => r.ifname === iface.devId
-            );
-            return (
-              <tr
-                key={iface._id}
-                className={selectedIface === iface._id ? "table-primary" : ""}
-              >
-                <td>
-                  <Input
-                    type="radio"
-                    checked={selectedIface === iface._id}
-                    onChange={() => setSelectedIface(iface._id)}
-                  />
-                </td>
-                <td>{iface.name}</td>
-                <td>{iface.type}</td>
-                <td>
-                  <Badge color={iface.isAssigned ? "success" : "danger"}>
-                    {iface.isAssigned ? "Yes" : "No"}
-                  </Badge>
-                </td>
-                <td>
-                  {iface.IPv4 ? `${iface.IPv4}/${iface.IPv4Mask || 24}` : "-"}
-                </td>
-                <td>
-                  {iface.gateway ? (
-                    <FormGroup check inline>
-                      <Label check>
-                        <Input
-                          type="radio"
-                          checked={selectedGW === iface._id}
-                          onChange={() => setSelectedGW(iface._id)}
-                        />
-                        {iface.gateway}
-                      </Label>
-                    </FormGroup>
-                  ) : (
-                    "-"
-                  )}
-                </td>
-                <td>{route?.metric || "-"}</td>
-                <td>{iface.PublicIP || "n/a"}</td>
-                <td>{iface.routing || "None"}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
-  );
-};
+import DeviceOverview from "./DeviceOverview"; // We'll extract DeviceOverview
+import InterfaceSettingsModal from "./InterfaceSettingModal";
 
 const DeviceInterfacePage = ({ _id }) => {
   const [deviceData, setDeviceData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedInterface, setSelectedInterface] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -103,12 +23,30 @@ const DeviceInterfacePage = ({ _id }) => {
       }
     };
     fetchData();
-  }, []);
+  }, [_id]);
 
-  if (loading) return <Spinner className="m-4" />;
-  if (error) return <p className="text-danger m-4">{error}</p>;
-
-  return <DeviceOverview device={deviceData} />;
+  return (
+    <div>
+      {loading ? (
+        <Spinner className="m-4" />
+      ) : error ? (
+        <p className="text-danger m-4">{error}</p>
+      ) : (
+        <>
+          <DeviceOverview
+            device={deviceData}
+            setModalOpen={setModalOpen}
+            setSelectedInterface={setSelectedInterface}
+          />
+          <InterfaceSettingsModal
+            isOpen={modalOpen}
+            toggle={() => setModalOpen(false)}
+            iface={selectedInterface}
+          />
+        </>
+      )}
+    </div>
+  );
 };
 
 export default DeviceInterfacePage;

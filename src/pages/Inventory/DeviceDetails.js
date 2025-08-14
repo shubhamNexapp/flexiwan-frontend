@@ -13,6 +13,8 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Spinner,
+  FormGroup,
 } from "reactstrap";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
@@ -42,6 +44,7 @@ import EdgeSettings from "./Tabs/Troubleshooting/EdgeSettings";
 import Logs from "./Tabs/Troubleshooting/Logs";
 import PacketTraces from "./Tabs/Troubleshooting/PacketTraces";
 import RecoveryInfo from "./Tabs/Troubleshooting/RecoveryInfo";
+import { putData } from "../../helpers/api";
 
 // Fix Leaflet default icon issue
 delete L.Icon.Default.prototype._getIconUrl;
@@ -100,8 +103,11 @@ const DeviceDetails = () => {
   const navigate = useNavigate();
   const device = state?.device;
 
+  const [loading, setLoading] = useState(false); // was true before, now false by default
+
   const [formValues, setFormValues] = useState({
     _id: device?._id || "",
+    OrgID: device?.org || "",
     name: device?.name || "",
     description: device?.description || "",
     isApproved: device?.isApproved || false,
@@ -112,9 +118,28 @@ const DeviceDetails = () => {
 
   const coordinates = device?.coords;
 
-  const handleUpdate = () => {
-    console.log("Updated Device Info:", formValues);
-    // Add update logic
+  const handleUpdate = async () => {
+    setLoading(true); // start spinner
+
+    const payload = {
+      _id: formValues._id,
+      OrgID: formValues.OrgID,
+      name: formValues.name,
+      description: formValues.description,
+      isApproved: formValues.isApproved,
+    };
+
+    try {
+      await putData(
+        `devices/${formValues._id}?org=${formValues.OrgID}`,
+        payload
+      );
+      navigate("/devices");
+    } catch (error) {
+      console.error("Error updating device:", error);
+    } finally {
+      setLoading(false); // stop spinner
+    }
   };
 
   const handleChange = (e) => {
@@ -198,7 +223,7 @@ const DeviceDetails = () => {
                 onChange={handleChange}
               />
             </Col>
-            <Col md={6} className="mb-4">
+            {/* <Col md={6} className="mb-4">
               <Label>Approved</Label>
               <div className="form-check">
                 <Input
@@ -212,7 +237,23 @@ const DeviceDetails = () => {
                   Is Approved
                 </Label>
               </div>
-            </Col>
+            </Col> */}
+
+            <FormGroup className="d-flex flex-column">
+              <Label className="mb-1">Approved</Label>
+              <div className="form-check form-switch">
+                <input
+                  id="bgpEnable"
+                  className="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  defaultChecked
+                  checked={formValues.isApproved}
+                  onChange={handleChange}
+                />
+                <label className="form-check-label" htmlFor="bgpEnable" />
+              </div>
+            </FormGroup>
 
             <Col md={12}>
               <hr />
@@ -245,8 +286,14 @@ const DeviceDetails = () => {
             </Col>
 
             <Col md={12} className="mt-4">
-              <Button color="primary" onClick={handleUpdate}>
-                Update Device Info
+              <Button color="primary" onClick={handleUpdate} disabled={loading}>
+                {loading ? (
+                  <>
+                    <Spinner size="sm" /> Updating...
+                  </>
+                ) : (
+                  "Update Device Info"
+                )}
               </Button>
             </Col>
 
@@ -302,7 +349,7 @@ const DeviceDetails = () => {
       case "Routing Tables":
         return <RoutingTables _id={formValues._id} />;
       case "Statistic":
-        return <Statistic _id={formValues._id} />;
+        return <Statistic _id={formValues._id} OrgID={formValues.OrgID} />;
       case "VRRP":
         return <VRRP _id={formValues._id} />;
 
