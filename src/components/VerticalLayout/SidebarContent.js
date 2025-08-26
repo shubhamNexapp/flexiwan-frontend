@@ -164,7 +164,8 @@ const SidebarContent = (props) => {
 
             <li>
               <Link to="/#" className="has-arrow">
-                <FeatherIcon icon="hard-drive" /> <span>{props.t("Account")}</span>
+                <FeatherIcon icon="hard-drive" />{" "}
+                <span>{props.t("Account")}</span>
               </Link>
               <ul className="sub-menu">
                 <li>
@@ -186,6 +187,15 @@ const SidebarContent = (props) => {
               <ul className="sub-menu">
                 <li>
                   <Link to="/devices">{props.t("Devices")}</Link>
+                </li>
+                <li>
+                  <Link to="/tunnels">{props.t("Tunnels")}</Link>
+                </li>
+                <li>
+                  <Link to="/peers">{props.t("Peers")}</Link>
+                </li>
+                 <li>
+                  <Link to="/path-labels">{props.t("Path Labels")}</Link>
                 </li>
               </ul>
             </li>

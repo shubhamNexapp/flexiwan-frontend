@@ -124,6 +124,9 @@ import AccessKeys from "../pages/Account/AccessKeys/index";
 import AddTokens from "../pages/Account/AccessKeys/Add";
 import Devices from "../pages/Inventory/Devices";
 import DeviceDetails from "../pages/Inventory/DeviceDetails";
+import Tunnels from "../pages/Inventory/Tunnels";
+import Peers from "../pages/Inventory/Peers";
+import PathLabels from "../pages/Inventory/PathLabels";
 
 const userRoutes = [
   //dashboard
@@ -145,6 +148,9 @@ const userRoutes = [
   //Inventory
   { path: "/devices", component: <Devices /> },
   { path: "/device-details/:id", component: <DeviceDetails /> },
+  { path: "/tunnels", component: <Tunnels /> },
+  { path: "/peers", component: <Peers /> },
+  { path: "/path-labels", component: <PathLabels /> },
 
   //profile
   { path: "/profile", component: <UserProfile /> },
