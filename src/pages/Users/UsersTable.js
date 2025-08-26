@@ -50,7 +50,6 @@ function GlobalFilter({
   );
 }
 
-console.log("check")
 
 // Table component
 function Table({ columns, data }) {
