@@ -50,6 +50,8 @@ function GlobalFilter({
   );
 }
 
+console.log("check")
+
 // Table component
 function Table({ columns, data }) {
   const defaultColumn = React.useMemo(() => ({
