@@ -194,8 +194,28 @@ const SidebarContent = (props) => {
                 <li>
                   <Link to="/peers">{props.t("Peers")}</Link>
                 </li>
-                 <li>
+                <li>
                   <Link to="/path-labels">{props.t("Path Labels")}</Link>
+                </li>
+                 <li>
+                  <Link to="/traffic">{props.t("Traffic and App Identification")}</Link>
+                </li>
+                 <li>
+                  <Link to="/link-monitors">{props.t("Link Monitors")}</Link>
+                </li>
+              </ul>
+            </li>
+
+            <li>
+              <Link to="/#" className="has-arrow">
+                <FeatherIcon icon="user" /> <span>{props.t("Traffic Optimization")}</span>
+              </Link>
+               <ul className="sub-menu">
+                <li>
+                  <Link to="/path-selection">{props.t("Path Selection")}</Link>
+                </li>
+                <li>
+                  <Link to="/qos">{props.t("QoS")}</Link>
                 </li>
               </ul>
             </li>

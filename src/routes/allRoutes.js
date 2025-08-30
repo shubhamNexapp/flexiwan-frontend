@@ -127,6 +127,12 @@ import DeviceDetails from "../pages/Inventory/DeviceDetails";
 import Tunnels from "../pages/Inventory/Tunnels";
 import Peers from "../pages/Inventory/Peers";
 import PathLabels from "../pages/Inventory/PathLabels";
+import TrafficAndAppIdentification from "../pages/Inventory/TrafficAndAppIdentification";
+import LinkMonitors from "../pages/Inventory/LinkMonitors";
+import PathSelection from "../pages/Traffic Optimization/PathSelection";
+import CreatePolicy from "../pages/Traffic Optimization/CreatePolicy";
+import QOS from "../pages/Traffic Optimization/QOS";
+import CreateEditQOS from "../pages/Traffic Optimization/CreateEditQOS";
 
 const userRoutes = [
   //dashboard
@@ -151,6 +157,14 @@ const userRoutes = [
   { path: "/tunnels", component: <Tunnels /> },
   { path: "/peers", component: <Peers /> },
   { path: "/path-labels", component: <PathLabels /> },
+  { path: "/traffic", component: <TrafficAndAppIdentification /> },
+  { path: "/link-monitors", component: <LinkMonitors /> },
+
+  //Traffic Optimization
+  { path: "/path-selection", component: <PathSelection /> },
+  { path: "/create-policy", component: <CreatePolicy /> },
+  { path: "/qos", component: <QOS /> },
+  { path: "/create-edit-qos", component: <CreateEditQOS /> },
 
   //profile
   { path: "/profile", component: <UserProfile /> },
