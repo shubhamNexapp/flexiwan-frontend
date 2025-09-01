@@ -133,6 +133,11 @@ import PathSelection from "../pages/Traffic Optimization/PathSelection";
 import CreatePolicy from "../pages/Traffic Optimization/CreatePolicy";
 import QOS from "../pages/Traffic Optimization/QOS";
 import CreateEditQOS from "../pages/Traffic Optimization/CreateEditQOS";
+import Firewall from "../pages/Security/Firewall";
+import CreateEditFirewall from "../pages/Security/CreateEditFirewallPolicy";
+import VRRP from "../pages/HighAvailability/VRRPView";
+import VRRPView from "../pages/HighAvailability/VRRPView";
+import CreateEditGroupTable from "../pages/HighAvailability/CreateEditGroupTable";
 
 const userRoutes = [
   //dashboard
@@ -165,6 +170,15 @@ const userRoutes = [
   { path: "/create-policy", component: <CreatePolicy /> },
   { path: "/qos", component: <QOS /> },
   { path: "/create-edit-qos", component: <CreateEditQOS /> },
+
+  //High Availiability
+  { path: "/vrrp", component: <VRRPView /> },
+  { path: "/create-edit-vrrp-table", component: <CreateEditGroupTable /> },
+
+  //Security
+  { path: "/firewall", component: <Firewall /> },
+  { path: "/create-edit-firewall", component: <CreateEditFirewall /> },
+
 
   //profile
   { path: "/profile", component: <UserProfile /> },
