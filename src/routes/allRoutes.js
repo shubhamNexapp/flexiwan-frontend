@@ -138,6 +138,9 @@ import CreateEditFirewall from "../pages/Security/CreateEditFirewallPolicy";
 import VRRP from "../pages/HighAvailability/VRRPView";
 import VRRPView from "../pages/HighAvailability/VRRPView";
 import CreateEditGroupTable from "../pages/HighAvailability/CreateEditGroupTable";
+import Installed from "../pages/AppStore/Installed";
+import EditInstalledConfigurations from "../pages/AppStore/EditInstalledConfigurations";
+import Available from "../pages/AppStore/Available";
 
 const userRoutes = [
   //dashboard
@@ -174,6 +177,11 @@ const userRoutes = [
   //High Availiability
   { path: "/vrrp", component: <VRRPView /> },
   { path: "/create-edit-vrrp-table", component: <CreateEditGroupTable /> },
+
+  //App Store
+  { path: "/installed", component: <Installed /> },
+  { path: "/edit-configurations", component: <EditInstalledConfigurations /> },
+  { path: "/available", component: <Available /> },
 
   //Security
   { path: "/firewall", component: <Firewall /> },
