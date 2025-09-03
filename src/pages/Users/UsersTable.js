@@ -122,9 +122,7 @@ function DatatableTables() {
 
   const fetchMembers = async () => {
     try {
-      LoaderShow()
       const response = await getData("/members");
-      LoaderHide()
       const formatted = response.map((member) => {
         let entity = "-";
         if (member.group) {
@@ -146,9 +144,7 @@ function DatatableTables() {
       });
 
       setTableData(formatted);
-      LoaderHide()
     } catch (error) {
-      LoaderHide()
       console.error("Failed to load member data:", error);
     }
   };
@@ -208,25 +204,6 @@ function DatatableTables() {
 
   return (
     <div className="page-content">
-      <div
-        id="hideloding"
-        className="loding-display"
-        style={{
-          display: "none",
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          backgroundColor: "rgba(255,255,255,0.7)",
-          justifyContent: "center",
-          alignItems: "center",
-          zIndex: 9999,
-          display: "flex",
-        }}
-      >
-        <img src={loader} alt="loader-img" style={{ width: "100px", height: "100px" }} />
-      </div>
       <Container fluid>
         <Breadcrumbs title="Tables" breadcrumbItem="Users List" />
         <Row>

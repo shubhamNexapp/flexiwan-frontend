@@ -152,7 +152,7 @@ const SidebarContent = (props) => {
             <li className="menu-title">{props.t("Menu")} </li>
             <li>
               <Link to="/dashboard" className="">
-                <FeatherIcon icon="home" /> <span>{props.t("Dashboard")}</span>
+                <FeatherIcon icon="home" /> <span>{props.t("Home")}</span>
               </Link>
             </li>
 
@@ -208,7 +208,7 @@ const SidebarContent = (props) => {
 
             <li>
               <Link to="/#" className="has-arrow">
-                <FeatherIcon icon="user" /> <span>{props.t("Traffic Optimization")}</span>
+                <FeatherIcon icon="command" /> <span>{props.t("Traffic Optimization")}</span>
               </Link>
               <ul className="sub-menu">
                 <li>
@@ -222,7 +222,7 @@ const SidebarContent = (props) => {
 
             <li>
               <Link to="/#" className="has-arrow">
-                <FeatherIcon icon="user" /> <span>{props.t("Security")}</span>
+                <FeatherIcon icon="shield" /> <span>{props.t("Security")}</span>
               </Link>
               <ul className="sub-menu">
                 <li>
@@ -233,7 +233,7 @@ const SidebarContent = (props) => {
 
             <li>
               <Link to="/#" className="has-arrow">
-                <FeatherIcon icon="user" /> <span>{props.t("High-Availability")}</span>
+                <FeatherIcon icon="activity" /> <span>{props.t("High-Availability")}</span>
               </Link>
               <ul className="sub-menu">
                 <li>
@@ -244,7 +244,7 @@ const SidebarContent = (props) => {
 
             <li>
               <Link to="/#" className="has-arrow">
-                <FeatherIcon icon="user" /> <span>{props.t("App Store")}</span>
+                <FeatherIcon icon="shopping-bag" /> <span>{props.t("App Store")}</span>
               </Link>
               <ul className="sub-menu">
                 <li>
@@ -252,6 +252,37 @@ const SidebarContent = (props) => {
                 </li>
                 <li>
                   <Link to="/available">{props.t("Available")}</Link>
+                </li>
+              </ul>
+            </li>
+
+             <li>
+              <Link to="/#" className="has-arrow">
+                <FeatherIcon icon="bar-chart-2" /> <span>{props.t("Dashboard")}</span>
+              </Link>
+              <ul className="sub-menu">
+                <li>
+                  <Link to="/network">{props.t("Network")}</Link>
+                </li>
+                <li>
+                  <Link to="/world-map">{props.t("WorldMap")}</Link>
+                </li>
+                <li>
+                  <Link to="/network-traffic">{props.t("NetworkTraffic")}</Link>
+                </li>
+              </ul>
+            </li>
+
+            {/* <li>
+              <Link to="/#" className="has-arrow">
+                <FeatherIcon icon="eye" /> <span>{props.t("Troubleshoot")}</span>
+              </Link>
+              <ul className="sub-menu">
+                <li>
+                  <Link to="/jobs">{props.t("Jobs")}</Link>
+                </li>
+                <li>
+                  <Link to="/notifications">{props.t("Notifications")}</Link>
                 </li>
               </ul>
             </li>
@@ -314,9 +345,7 @@ const SidebarContent = (props) => {
 
                 <li>
                   <Link to="/#" className="has-arrow ">
-                    {/* <span className="badge rounded-pill badge-soft-danger text-danger float-end">
-                      New
-                    </span> */}
+                    
                     <span>{props.t("Blog")}</span>
                   </Link>
                   <ul className="sub-menu">
@@ -372,6 +401,7 @@ const SidebarContent = (props) => {
                 </li>
               </ul>
             </li>
+
             <li>
               <Link to="/#" className="has-arrow ">
                 <FeatherIcon icon="file-text" /> <span>{props.t("Pages")}</span>
@@ -634,7 +664,7 @@ const SidebarContent = (props) => {
                   </ul>
                 </li>
               </ul>
-            </li>
+            </li> */}
           </ul>
           <div className="card sidebar-alert border-0 text-center mx-4 mb-0 mt-5">
             <div className="card-body">

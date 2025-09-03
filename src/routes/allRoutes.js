@@ -141,6 +141,12 @@ import CreateEditGroupTable from "../pages/HighAvailability/CreateEditGroupTable
 import Installed from "../pages/AppStore/Installed";
 import EditInstalledConfigurations from "../pages/AppStore/EditInstalledConfigurations";
 import Available from "../pages/AppStore/Available";
+import Jobs from "../pages/Troubleshoot/Jobs";
+import NotificationsPage from "../pages/Troubleshoot/NotificationsPage";
+import VisNetwork from "../pages/DashboardView/Network";
+import WorldMap from "../pages/DashboardView/WorldMap";
+import NetworkTraffic from "../pages/DashboardView/NetworkTraffic";
+
 
 const userRoutes = [
   //dashboard
@@ -182,6 +188,17 @@ const userRoutes = [
   { path: "/installed", component: <Installed /> },
   { path: "/edit-configurations", component: <EditInstalledConfigurations /> },
   { path: "/available", component: <Available /> },
+
+  //Dashboard View
+  { path: "/network", component: <VisNetwork /> },
+  { path: "/world-map", component: <WorldMap /> },
+  { path: "/network-traffic", component: <NetworkTraffic /> },
+
+
+  //Troubleshoot
+  { path: "/jobs", component: <Jobs /> },
+  { path: "/notifications", component: <NotificationsPage /> },
+
 
   //Security
   { path: "/firewall", component: <Firewall /> },
